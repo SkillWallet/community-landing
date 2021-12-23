@@ -47,7 +47,7 @@ var SkillWallet = (function (jQ, win, doc) {
 })(jQuery, window, document);
 
 SkillWallet = (function (SkillWallet, $, window, document) {
-  "use strict";
+  ("use strict");
   // Defined Variables
   var $win = $(window),
     $doc = $(document),
@@ -87,13 +87,15 @@ SkillWallet = (function (SkillWallet, $, window, document) {
   )
     ? true
     : false;
-  SkillWallet.getStatus.asMobile = SkillWallet.Win.width < _mobBreak ? true : false;
+  SkillWallet.getStatus.asMobile =
+    SkillWallet.Win.width < _mobBreak ? true : false;
 
   // Update on Resize
   $win.on("resize", function () {
     SkillWallet.Win.height = $(window).height();
     SkillWallet.Win.width = $(window).width();
-    SkillWallet.getStatus.asMobile = SkillWallet.Win.width < _mobBreak ? true : false;
+    SkillWallet.getStatus.asMobile =
+      SkillWallet.Win.width < _mobBreak ? true : false;
   });
 
   //// Utilities ////
@@ -600,19 +602,27 @@ SkillWallet = (function (SkillWallet, $, window, document) {
   /////////////////
   SkillWallet.Plugins = {};
 
+  const fontSize = parseInt(
+    getComputedStyle(document.documentElement).fontSize
+  );
+  const remWidth = 26 * parseInt(fontSize); // parseInt to get rid of 'px' and convert from string to number
+
+  console.log(remWidth, "remWidth", fontSize);
   // Flex Slider !Plugin @v1.9.1
   SkillWallet.Plugins.flexslider = function () {
     var $FlexSlioder = $(".flexslider");
     if ($FlexSlioder.exists()) {
       $FlexSlioder.flexslider({
         animation: "slide",
-        controlNav: true,
-        animationLoop: false,
-        minItems: 1,
-        maxItems: 1,
+        animationLoop: true,
+        itemWidth: remWidth,
+        itemMargin: 30,
+        move: 1,
+        controlNav: false,
       });
     }
   };
+
   SkillWallet.components.docReady.push(SkillWallet.Plugins.flexslider);
 
   // Validator !Plugin @v1.0
@@ -654,16 +664,16 @@ SkillWallet = (function (SkillWallet, $, window, document) {
           submitHandler: function (form) {
             var unindexed_array = $(form).serializeArray();
             var formData = {};
-            $.map(unindexed_array, function(n, i){
-                formData[n['name']] = n['value'];
+            $.map(unindexed_array, function (n, i) {
+              formData[n["name"]] = n["value"];
             });
             _result.slideUp(400);
             $.ajax({
-              type: 'POST',
-              data : JSON.stringify(formData),
-              contentType: "application/json; charset=utf-8",         
-              dataType : "json",
-              url: 'http://localhost:4000/skillwallet/api',
+              type: "POST",
+              data: JSON.stringify(formData),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              url: "http://localhost:4000/skillwallet/api",
               success: function (data) {
                 var type =
                   data.result === "error" ? "alert-danger" : "alert-success";
